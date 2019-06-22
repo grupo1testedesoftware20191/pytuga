@@ -5,11 +5,8 @@ import pytuga.lib.tuga_std as std
 
 def test_real():
 	
-	assert(std.real(5) == 5.0)
-	assert(std.real(673.23) == 673.23)
-	assert(std.real("673.23") == 673.23)
-	assert(std.real("3.1415") == 3.1415)
-	assert(std.real(42) == 42.0)
+	assert(std.real(5) == 5.0 and std.real(673.23) == 673.23 and std.real(42) == 42.0)
+	assert(std.real("673.23") == 673.23 and std.real("3.1415") == 3.1415)
 
 def test_inteiro():
 

@@ -52,12 +52,8 @@ def test_arredondar():
 
 def test_truncar():
 
-	assert(math.truncar(1.6) == 1)
-	assert(math.truncar(1.8) == 1)
-	assert(math.truncar(5.3) == 5)
-	assert(math.truncar(3.14) == 3)
-	assert(math.truncar(1.806) == 1)
-	assert(math.truncar(9.7) == 9)
+	assert(math.truncar(1.6) == 1 and math.truncar(1.8) == 1 and math.truncar(1.806) == 1)
+	assert(math.truncar(5.3) == 5 and math.truncar(3.14) == 3 and math.truncar(9.7) == 9)
 
 def test_maximo():
 
@@ -88,17 +84,9 @@ def test_algum():
 
 def test_aleatorio():
 
-	resultado1 = math.aleatório()
-	resultado2 = math.aleatório()
-	resultado3 = math.aleatório()
-	resultado4 = math.aleatório()
-	resultado5 = math.aleatório()
-
-	assert(resultado1 >= 0 and resultado1 <= 1)
-	assert(resultado2 >= 0 and resultado2 <= 1)
-	assert(resultado3 >= 0 and resultado3 <= 1)
-	assert(resultado4 >= 0 and resultado4 <= 1)
-	assert(resultado5 >= 0 and resultado5 <= 1)
+	for i in range(5):
+		resultado = math.aleatório()
+		assert(resultado >= 0 and resultado <= 1)
 
 def test_inteiro_aleatório():
 	
@@ -107,14 +95,6 @@ def test_inteiro_aleatório():
 
 def test_lancar_dado():
 
-	resultado1 = math.lançar_dado()
-	resultado2 = math.lançar_dado()
-	resultado3 = math.lançar_dado()
-	resultado4 = math.lançar_dado()
-	resultado5 = math.lançar_dado()
-
-	assert(resultado1 >= 1 and resultado1 <= 6)
-	assert(resultado2 >= 1 and resultado2 <= 6)
-	assert(resultado3 >= 1 and resultado3 <= 6)
-	assert(resultado4 >= 1 and resultado4 <= 6)
-	assert(resultado5 >= 1 and resultado5 <= 6)
+	for i in range(5):
+		resultado = math.lançar_dado()
+		assert(resultado >= 1 and resultado <= 6)
