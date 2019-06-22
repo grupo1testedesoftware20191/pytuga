@@ -117,42 +117,41 @@ def test_passthru(passtru):
 # Old tests
 #
 def test_para_cada_in_range():
-    ptsrc = 'para x de 1 até 10: mostre(x)'
-    pysrc = 'for x in range(1, 10 + 1): mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
 
-    ptsrc = 'para x de 1 até 10:\n    mostre(x)'
-    pysrc = 'for x in range(1, 10 + 1):\n    mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc = []
+    pysrc = []
 
-    ptsrc = 'para x de 1 até 10 faça: mostre(x)'
-    pysrc = 'for x in range(1, 10 + 1): mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('para x de 1 até 10: mostre(x)')
+    pysrc.append('for x in range(1, 10 + 1): mostre(x)')
 
-    ptsrc = 'para x de 1 até 10 a cada 2: mostre(x)'
-    pysrc = 'for x in range(1, 10 + 1, 2): mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('para x de 1 até 10:\n    mostre(x)')
+    pysrc.append('for x in range(1, 10 + 1):\n    mostre(x)')
 
-    ptsrc = 'para x de 1 até 10 a cada 2 faça: mostre(x)'
-    pysrc = 'for x in range(1, 10 + 1, 2): mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('para x de 1 até 10 faça: mostre(x)')
+    pysrc.append('for x in range(1, 10 + 1): mostre(x)')
 
-    ptsrc = 'para x de 1 até 10 a cada 2 faça:\n    mostre(x)'
-    pysrc = 'for x in range(1, 10 + 1, 2):\n    mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('para x de 1 até 10 a cada 2: mostre(x)')
+    pysrc.append('for x in range(1, 10 + 1, 2): mostre(x)')
 
-    ptsrc = '\n\npara cada x em [1, 2, 3]: mostre(x)'
-    pysrc = '\n\nfor x in [1, 2, 3]: mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('para x de 1 até 10 a cada 2 faça: mostre(x)')
+    pysrc.append('for x in range(1, 10 + 1, 2): mostre(x)')
 
-    ptsrc = 'para x de 10 até 20: mostre(x)'
-    pysrc = 'for x in range(10, 20 + 1): mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('para x de 1 até 10 a cada 2 faça:\n    mostre(x)')
+    pysrc.append('for x in range(1, 10 + 1, 2):\n    mostre(x)')
 
-    ptsrc = 'para xx de 10 até 20: mostre(x)'
-    pysrc = 'for xx in range(10, 20 + 1): mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('\n\npara cada x em [1, 2, 3]: mostre(x)')
+    pysrc.append('\n\nfor x in [1, 2, 3]: mostre(x)')
 
+    ptsrc.append('para x de 10 até 20: mostre(x)')
+    pysrc.append('for x in range(10, 20 + 1): mostre(x)')
+
+    ptsrc.append('para xx de 10 até 20: mostre(x)')
+    pysrc.append('for xx in range(10, 20 + 1): mostre(x)')
+
+    test_cases = list(zip(ptsrc, pysrc))
+
+    for pt_str, py_str in test_cases:
+        assert pytg(pt_str) == py(py_str)
 
 def test_enquanto():
     ptsrc = 'enquanto x < 1: mostre(x)'
@@ -173,25 +172,28 @@ def test_enquanto():
 
 
 def test_se():
-    ptsrc = 'se x < 1 então: mostre(x)'
-    pysrc = 'if x < 1: mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc = []
+    pysrc = []
 
-    ptsrc = 'se x < 1: mostre(x)'
-    pysrc = 'if x < 1: mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('se x < 1 então: mostre(x)')
+    pysrc.append('if x < 1: mostre(x)')
 
-    ptsrc = 'se x < 1 então:\n    mostre(x)'
-    pysrc = 'if x < 1:\n    mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('se x < 1: mostre(x)')
+    pysrc.append('if x < 1: mostre(x)')
 
-    ptsrc = 'se não x: mostre(x)'
-    pysrc = 'if not x: mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('se x < 1 então:\n    mostre(x)')
+    pysrc.append('if x < 1:\n    mostre(x)')
 
-    ptsrc = '\n\n\nse não x: mostre(x)'
-    pysrc = '\n\n\nif not x: mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('se não x: mostre(x)')
+    pysrc.append('if not x: mostre(x)')
+
+    ptsrc.append('\n\n\nse não x: mostre(x)')
+    pysrc.append('\n\n\nif not x: mostre(x)')
+
+    test_cases = zip(ptsrc, pysrc)
+
+    for pt_str, py_str in test_cases:
+        assert pytg(pt_str) == py(py_str)
 
 
 def test_se_senao():
@@ -230,28 +232,29 @@ else:
     assert pytg(ptsrc) == py(pysrc)
 
 
-def test_funcion_definition():
-    ptsrc = 'função foo(x): retorne x'
-    pysrc = 'def foo(x): return x'
-    assert pytg(ptsrc) == py(pysrc)
+def test_function_definition():
+    
+    ptsrc = []
+    pysrc = []
 
-    ptsrc = 'definir foo(x): retorne x'
-    pysrc = 'def foo(x): return x'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('função foo(x): retorne x')
+    pysrc.append('def foo(x): return x')
 
-    ptsrc = 'definir função foo(x): retorne x'
-    pysrc = 'def foo(x): return x'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('definir foo(x): retorne x')
+    pysrc.append('def foo(x): return x')
 
-    ptsrc = 'definir função foo(x):\n    retorne x'
-    pysrc = 'def foo(x):\n    return x'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('definir função foo(x): retorne x')
+    pysrc.append('def foo(x): return x')
+
+    ptsrc.append('definir função foo(x):\n    retorne x')
+    pysrc.append('def foo(x):\n    return x')
 
     # Integração
-    ptsrc = 'para cada x em [1, 2, 3]:\n    mostre(x ou z)'
-    pysrc = 'for x in [1, 2, 3]:\n    mostre(x or z)'
-    assert pytg(ptsrc) == py(pysrc)
+    ptsrc.append('para cada x em [1, 2, 3]:\n    mostre(x ou z)')
+    pysrc.append('for x in [1, 2, 3]:\n    mostre(x or z)')
 
+    for pt_str, py_str in zip(ptsrc, pysrc):
+        assert pytg(pt_str) == py(py_str)
 
 #
 # Simple binary operators
@@ -341,7 +344,6 @@ def test_separate_command_blocks_regression():
     ptsrc = '\n\n\nsenão faça: mostre(x)'
     pysrc = '\n\n\nelse: mostre(x)'
     assert pytg(ptsrc) == py(pysrc)
-
 
 def test_function_with_long_docstring():
     ptsrc = '''
