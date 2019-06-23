@@ -55,40 +55,51 @@ class PytugaLexer(Lexer):
                     '    Espera comando do tipo\n\n'
                     '        repetir <N> vezes:\n'
                     '            <BLOCO>\n\n'
-                    '    Palavra chave "vezes" está faltando!' % (start.lineno))
+                    '    Palavra chave "vezes" está faltando!' % (start.lineno)
+                )
             else:
                 tokens[idx] = Token(')', start=start)
                 token.displace_tokens(tokens[idx + 1:], -4)
 
         return tokens
 
-    def process_de_ate_command(self, tokens):
-        """
-        Converts command::
+    def end_command(self, idx, match, start, end, iterator, tokens):
+        # Finish command
+        if match[0] in (NEWLINE, ':'):
+            token.displace_tokens(tokens[idx:], 1)
+            endtokens = Token.from_strings(start, '+', '1', ')')
+            token.insert_tokens_at(tokens, idx, endtokens, end=end)
 
-            de <X> até <Y> [a cada <Z>]
+        # Unexpected token
+        else:
+            raise SyntaxError(
+                'comando malformado na linha %s.\n'
+                '    Espera um ":" no fim do bloco' % (start.lineno)
+            )
+        return tokens
 
-        to::
+    def insert_a_cada(self, idx, match, start, end, iterator, tokens):
+        # Matches "a cada" or the end of the line
+        if match == ('a', 'cada'):
+            middletokens = Token.from_strings(start, '+', '1', ',')
+            del tokens[idx:idx + 2]
+            token.insert_tokens_at(tokens, idx, middletokens, end=end)
 
-            in range(<X>, <Y> + 1[, <Z>])
+            # Proceed to the end of the line
+            idx, match, start, end = next(iterator)
+            if match[0] not in (NEWLINE, ':'):
+                raise SyntaxError(
+                    'comando malformado na linha %s.\n'
+                    '    Espera um ":" no fim do bloco' % (start.lineno)
+                )
+            endtok = Token(')', start=start)
+            token.displace_tokens(tokens[idx:], 1)
+            tokens.insert(idx, endtok)
+            return self.end_command(idx, match, start, end, iterator, tokens)
+        return None
 
-        """
-
-        matches = [('de',), ('ate',), ('a', 'cada',), (NEWLINE,), (':',)]
-        iterator = token.token_find(tokens, matches)
-        for idx, match, start, end in iterator:
-            # Waits for a 'de' token to start processing
-            if match[0] != 'de':
-                continue
-
-            # Send tokens for the beginning of the equivalent in range(...)
-            # test
-            start = tokens[idx].start
-            starttokens = Token.from_strings(start, 'in', 'range', '(')
-            del tokens[idx]
-            token.insert_tokens_at(tokens, idx, starttokens, end=end)
-
-            # Matches the 'até' token and insert a comma separator
+    def insert_ate(self, idx, match, start, end, iterator, tokens):
+        # Matches the 'até' token and insert a comma separator
             idx, match, start, end = next(iterator)
             if match[0] in ['até', 'ate']:
                 token.displace_tokens(tokens[idx:], -3)
@@ -103,37 +114,40 @@ class PytugaLexer(Lexer):
                 )
 
             idx, match, start, end = next(iterator)
+            return self.insert_a_cada(idx, match, start, end, iterator, tokens)
 
-            # Matches "a cada" or the end of the line
-            if match == ('a', 'cada'):
-                middletokens = Token.from_strings(start, '+', '1', ',')
-                del tokens[idx:idx + 2]
-                token.insert_tokens_at(tokens, idx, middletokens, end=end)
+    def funct_iter(self, iterator, tokens):
+        for idx, match, start, end in iterator:
+            # Waits for a 'de' token to start processing
+            if match[0] != 'de':
+                continue
 
-                # Proceed to the end of the line
-                idx, match, start, end = next(iterator)
-                if match[0] not in (NEWLINE, ':'):
-                    raise SyntaxError(
-                        'comando malformado na linha %s.\n'
-                        '    Espera um ":" no fim do bloco' % (start.lineno)
-                    )
-                endtok = Token(')', start=start)
-                token.displace_tokens(tokens[idx:], 1)
-                tokens.insert(idx, endtok)
+            # Send tokens for the beginning of the equivalent in range(...)
+            # test
+            start = tokens[idx].start
+            starttokens = Token.from_strings(start, 'in', 'range', '(')
+            del tokens[idx]
+            token.insert_tokens_at(tokens, idx, starttokens, end=end)
+            return self.insert_ate(idx, match, start, end, iterator)
 
-            # Finish command
-            elif match[0] in (NEWLINE, ':'):
-                token.displace_tokens(tokens[idx:], 1)
-                endtokens = Token.from_strings(start, '+', '1', ')')
-                token.insert_tokens_at(tokens, idx, endtokens, end=end)
+    def convert_command(self, tokens):
+        matches = [('de',), ('ate',), ('a', 'cada',), (NEWLINE,), (':',)]
+        iterator = token.token_find(tokens, matches)
+        tokens = self.funct_iter(iterator, tokens)
+        return tokens
 
-            # Unexpected token
-            else:
-                raise SyntaxError(
-                    'comando malformado na linha %s.\n'
-                    '    Espera um ":" no fim do bloco' % (start.lineno)
-                )
+    def process_de_ate_command(self, tokens):
+        """
+        Converts command::
 
+            de <X> até <Y> [a cada <Z>]
+
+        to::
+
+            in range(<X>, <Y> + 1[, <Z>])
+
+        """
+        tokens = self.convert_command(tokens)
         return tokens
 
     def transpile_tokens(self, tokens):
