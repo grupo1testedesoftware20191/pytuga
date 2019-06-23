@@ -116,84 +116,53 @@ def test_passthru(passtru):
 #
 # Old tests
 #
+
+def test_helper(string_ptsrc, string_pysrc):
+    ptsrc = string_ptsrc
+    pysrc = string_pysrc
+    assert pytg(ptsrc) == py(pysrc)
+    
+
 def test_para_cada_in_range():
-    ptsrc = []
-    pysrc = []
+    test_helper('para x de 1 até 10: mostre(x)','for x in range(1, 10 + 1): mostre(x)')
+    
+    test_helper('para x de 1 até 10:\n    mostre(x)','for x in range(1, 10 + 1):\n    mostre(x)')
 
-    ptsrc.append('para x de 1 até 10: mostre(x)')
-    pysrc.append('for x in range(1, 10 + 1): mostre(x)')
+    test_helper('para x de 1 até 10 faça: mostre(x)','for x in range(1, 10 + 1): mostre(x)')
 
-    ptsrc.append('para x de 1 até 10:\n    mostre(x)')
-    pysrc.append('for x in range(1, 10 + 1):\n    mostre(x)')
+    test_helper('para x de 1 até 10 a cada 2 faça: mostre(x)','for x in range(1, 10 + 1, 2): mostre(x)')
+    
+    test_helper('para x de 1 até 10 a cada 2 faça:\n    mostre(x)','for x in range(1, 10 + 1, 2):\n    mostre(x)')
 
-    ptsrc.append('para x de 1 até 10 faça: mostre(x)')
-    pysrc.append('for x in range(1, 10 + 1): mostre(x)')
+    test_helper('\n\npara cada x em [1, 2, 3]: mostre(x)','\n\nfor x in [1, 2, 3]: mostre(x)')
 
-    ptsrc.append('para x de 1 até 10 a cada 2: mostre(x)')
-    pysrc.append('for x in range(1, 10 + 1, 2): mostre(x)')
+    test_helper('para x de 10 até 20: mostre(x)','for x in range(10, 20 + 1): mostre(x)')
 
-    ptsrc.append('para x de 1 até 10 a cada 2 faça: mostre(x)')
-    pysrc.append('for x in range(1, 10 + 1, 2): mostre(x)')
+    test_helper('para xx de 10 até 20: mostre(x)','for xx in range(10, 20 + 1): mostre(x)')
 
-    ptsrc.append('para x de 1 até 10 a cada 2 faça:\n    mostre(x)')
-    pysrc.append('for x in range(1, 10 + 1, 2):\n    mostre(x)')
-
-    ptsrc.append('\n\npara cada x em [1, 2, 3]: mostre(x)')
-    pysrc.append('\n\nfor x in [1, 2, 3]: mostre(x)')
-
-    ptsrc.append('para x de 10 até 20: mostre(x)')
-    pysrc.append('for x in range(10, 20 + 1): mostre(x)')
-
-    ptsrc.append('para xx de 10 até 20: mostre(x)')
-    pysrc.append('for xx in range(10, 20 + 1): mostre(x)')
-
-    test_cases = list(zip(ptsrc, pysrc))
-
-    for pt_str, py_str in test_cases:
-        assert pytg(pt_str) == py(py_str)
 
 
 def test_enquanto():
-    ptsrc = 'enquanto x < 1: mostre(x)'
-    pysrc = 'while x < 1: mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    test_helper('enquanto x < 1: mostre(x)','while x < 1: mostre(x)')
 
-    ptsrc = 'enquanto x < 1 faça: mostre(x)'
-    pysrc = 'while x < 1: mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    test_helper('enquanto x < 1 faça: mostre(x)','while x < 1: mostre(x)')
 
-    ptsrc = 'enquanto x < 1 faça:\n    mostre(x)'
-    pysrc = 'while x < 1:\n    mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    test_helper('enquanto x < 1 faça:\n    mostre(x)','while x < 1:\n    mostre(x)')
 
-    ptsrc = 'enquanto não x: mostre(x)'
-    pysrc = 'while not x: mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    test_helper('enquanto não x: mostre(x)','while not x: mostre(x)')
 
 
 def test_se():
-    ptsrc = []
-    pysrc = []
+    test_helper('se x < 1 então: mostre(x)','if x < 1: mostre(x)')
+    
+    test_helper('se x < 1: mostre(x)','if x < 1: mostre(x)')
+    
+    test_helper('se x < 1 então:\n    mostre(x)','if x < 1:\n    mostre(x)')
 
-    ptsrc.append('se x < 1 então: mostre(x)')
-    pysrc.append('if x < 1: mostre(x)')
+    test_helper('se não x: mostre(x)','if not x: mostre(x)')
 
-    ptsrc.append('se x < 1: mostre(x)')
-    pysrc.append('if x < 1: mostre(x)')
+    test_helper('\n\n\nse não x: mostre(x)','\n\n\nif not x: mostre(x)') 
 
-    ptsrc.append('se x < 1 então:\n    mostre(x)')
-    pysrc.append('if x < 1:\n    mostre(x)')
-
-    ptsrc.append('se não x: mostre(x)')
-    pysrc.append('if not x: mostre(x)')
-
-    ptsrc.append('\n\n\nse não x: mostre(x)')
-    pysrc.append('\n\n\nif not x: mostre(x)')
-
-    test_cases = zip(ptsrc, pysrc)
-
-    for pt_str, py_str in test_cases:
-        assert pytg(pt_str) == py(py_str)
 
 
 def test_se_senao():
@@ -232,45 +201,28 @@ else:
     assert pytg(ptsrc) == py(pysrc)
 
 
-def test_function_definition():
+def test_funcion_definition():
+    test_helper('função foo(x): retorne x','def foo(x): return x')
+    
+    test_helper('definir foo(x): retorne x','def foo(x): return x')
 
-    ptsrc = []
-    pysrc = []
+    test_helper('definir função foo(x): retorne x','def foo(x): return x')
 
-    ptsrc.append('função foo(x): retorne x')
-    pysrc.append('def foo(x): return x')
-
-    ptsrc.append('definir foo(x): retorne x')
-    pysrc.append('def foo(x): return x')
-
-    ptsrc.append('definir função foo(x): retorne x')
-    pysrc.append('def foo(x): return x')
-
-    ptsrc.append('definir função foo(x):\n    retorne x')
-    pysrc.append('def foo(x):\n    return x')
+    test_helper('definir função foo(x):\n    retorne x','def foo(x):\n    return x')
 
     # Integração
-    ptsrc.append('para cada x em [1, 2, 3]:\n    mostre(x ou z)')
-    pysrc.append('for x in [1, 2, 3]:\n    mostre(x or z)')
+    test_helper('para cada x em [1, 2, 3]:\n    mostre(x ou z)','for x in [1, 2, 3]:\n    mostre(x or z)')
 
-    for pt_str, py_str in zip(ptsrc, pysrc):
-        assert pytg(pt_str) == py(py_str)
 
 
 #
 # Simple binary operators
 #
 def test_logical_and():
-    ptsrc = 'x e y'
-    pysrc = 'x and y'
-    assert pytg(ptsrc) == py(pysrc)
-
+    test_helper('x e y','x and y')
 
 def test_is_operator():
-    ptsrc = 'x é verdadeiro'
-    pysrc = 'x is True'
-    assert pytg(ptsrc) == py(pysrc)
-
+    test_helper('x é verdadeiro','x is True')
 
 def test_nested_loops():
     ptsrc = '''
@@ -330,21 +282,13 @@ for x in range(1, 2 + 1):
 # belong to any category in special
 #
 def test_separate_command_blocks_regression():
-    ptsrc = 'mostre(1)\n\n\n\npara cada x em [1, 2, 3]: mostre(x)'
-    pysrc = 'mostre(1)\n\n\n\nfor x in [1, 2, 3]: mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    test_helper('mostre(1)\n\n\n\npara cada x em [1, 2, 3]: mostre(x)','mostre(1)\n\n\n\nfor x in [1, 2, 3]: mostre(x)')
 
-    ptsrc = 'mostre(1)\n\n\n\npara x de 1 até 3: mostre(x)'
-    pysrc = 'mostre(1)\n\n\n\nfor x in range(1, 3 + 1): mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    test_helper('mostre(1)\n\n\n\npara x de 1 até 3: mostre(x)','mostre(1)\n\n\n\nfor x in range(1, 3 + 1): mostre(x)')
 
-    ptsrc = '\n\n\nsenão: mostre(x)'
-    pysrc = '\n\n\nelse: mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    test_helper('\n\n\nsenão: mostre(x)','\n\n\nelse: mostre(x)')
 
-    ptsrc = '\n\n\nsenão faça: mostre(x)'
-    pysrc = '\n\n\nelse: mostre(x)'
-    assert pytg(ptsrc) == py(pysrc)
+    test_helper('\n\n\nsenão faça: mostre(x)','\n\n\nelse: mostre(x)')
 
 def test_function_with_long_docstring():
     ptsrc = '''
@@ -365,6 +309,4 @@ def foo():
 
 
 def test_full_conditional_command():
-    ptsrc = 'se x então faça:\n    pass'
-    pysrc = 'if x:\n   pass'
-    assert pytg(ptsrc) == py(pysrc)
+    test_helper('se x então faça:\n    pass','if x:\n   pass')
